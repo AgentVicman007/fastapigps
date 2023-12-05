@@ -1,4 +1,3 @@
-install install 
 install fastapi 
 install sqlalchemy 
 install celery 

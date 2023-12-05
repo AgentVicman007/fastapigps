@@ -1,4 +1,3 @@
-install fastapi 
 install sqlalchemy 
 install celery 
 install psycopg2 

@@ -8,3 +8,4 @@ googlemaps
 alembic
 fastapi
 sqlalchemy
+uvicorn==0.15.0

@@ -1,11 +1,10 @@
-install celery 
-install psycopg2 
-install geopy 
-install boto3
-install requests
-install email-validator
-install googlemaps
-install alembic
-install celery
-install fastapi
-install sqlalchemy
+celery
+psycopg2
+geopy
+boto3
+requests
+email-validator
+googlemaps
+alembic
+fastapi
+sqlalchemy

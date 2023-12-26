@@ -28,8 +28,8 @@ from urllib.parse import quote_plus
 
 # New database credentials
 username = "db"
-password = "AVNS_iyizor6NGyef7T-4fwI"
-host = "app-8047bdcf-fa71-49a8-aa04-ac6abcd59948-do-user-10862778-0.c.db.ondigitalocean.com"
+password = "AVNS_B4MTfuthtl833VE-jYd"
+host = "app-52b6e654-56b8-4aad-85b6-9ea510ac0386-do-user-10862778-0.c.db.ondigitalocean.com"
 port = "25060"
 database = "db"
 sslmode = "require"

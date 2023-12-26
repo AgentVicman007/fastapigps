@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import create_engine, Column, Float, Integer, String, DateTime, text
 from sqlalchemy.ext.declarative import declarative_base
@@ -47,11 +47,17 @@ async def shutdown_db_client():
 
 @app.post("/capture_raw_data2")
 async def capture_raw_data2(raw_data: RawDataCreate):
-    print(raw_data.dict())  # Add this line to print the received data
+    try:
+        # Validate the Pydantic model
+        raw_data_dict = raw_data.dict()
+    except Exception as e:
+        # Print the validation error
+        print(f"Validation Error: {e}")
+        raise HTTPException(status_code=422, detail="Validation error")
 
     # Assuming you have a database logic to insert the raw_data into your PostgreSQL database
     # Replace the following lines with your actual database insertion logic
-    db_raw_data = RawData(**raw_data.dict())
+    db_raw_data = RawData(**raw_data_dict)
     query = RawData.__table__.insert().values(**db_raw_data.__dict__)
     await database.execute(query)
     

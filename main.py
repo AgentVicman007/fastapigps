@@ -50,6 +50,9 @@ class RawDataRequest(BaseModel):
     speed: float
     raw_data: str
 
+
+
+
 class DeviceQuery(BaseModel):
     device_ids: List[str] = Field(..., description="List of device IDs")
 

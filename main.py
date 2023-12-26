@@ -55,12 +55,6 @@ async def capture_raw_data2(raw_data: RawDataCreate):
         print(f"Validation Error: {e}")
         raise HTTPException(status_code=422, detail="Validation error")
 
-    # Assuming you have a database logic to insert the raw_data into your PostgreSQL database
-    # Replace the following lines with your actual database insertion logic
-    db_raw_data = RawData(**raw_data_dict)
-    query = RawData.__table__.insert().values(**db_raw_data.__dict__)
-    await database.execute(query)
-    
     response_data = {
         "status": "Record inserted successfully",
         "device_id": raw_data.device_id,

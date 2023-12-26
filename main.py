@@ -47,6 +47,8 @@ async def shutdown_db_client():
 
 @app.post("/capture_raw_data2")
 async def capture_raw_data2(raw_data: RawDataCreate):
+    print(raw_data.dict())  # Add this line to print the received data
+
     # Assuming you have a database logic to insert the raw_data into your PostgreSQL database
     # Replace the following lines with your actual database insertion logic
     db_raw_data = RawData(**raw_data.dict())

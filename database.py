@@ -27,11 +27,11 @@ from sqlalchemy.orm import sessionmaker
 from urllib.parse import quote_plus
 
 # New database credentials
-username = "db"
-password = "AVNS_B4MTfuthtl833VE-jYd"
-host = "app-52b6e654-56b8-4aad-85b6-9ea510ac0386-do-user-10862778-0.c.db.ondigitalocean.com"
+username = "django"
+password = "Josiah1!"
+host = "localhost"
 port = "25060"
-database = "db"
+database = "django"
 sslmode = "require"
 
 # URL-encode the password

@@ -111,7 +111,7 @@ async def create_address(address: AddressIn, db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
-import logging
+
 
 logger = logging.getLogger(__name__)
 

@@ -27,7 +27,7 @@ from sqlalchemy.orm import sessionmaker
 from urllib.parse import quote_plus
 
 # New database credentials
-username = "django"
+username = "postgres"
 password = "Josiah1!"
 host = "localhost"
 port = "25060"

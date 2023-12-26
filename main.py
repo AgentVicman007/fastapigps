@@ -67,3 +67,4 @@ async def capture_raw_data2(raw_data: RawDataCreate):
         "raw_data": raw_data.raw_data,
     }
     return response_data
+

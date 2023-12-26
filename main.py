@@ -13,8 +13,8 @@ app = FastAPI()
 # List of allowed origins (use ["*"] for allowing all origins) ONCE IN PROD might need to remove
 origins = [
     "http://localhost:3000",  # Adjust with your front-end URL
-    "http://localhost:8000"
-    "http://localhost:8008",
+    "http://localhost:8000",
+    "http://64.23.136.101:800"
     # Add more origins as needed
 ]
 

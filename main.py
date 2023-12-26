@@ -112,9 +112,8 @@ async def create_address(address: AddressIn, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-
+import logging
 logger = logging.getLogger(__name__)
-
 @app.post("/capture_raw_data")
 def capture_raw_data(data: RawDataRequest, db: Session = Depends(get_db)):
     try:

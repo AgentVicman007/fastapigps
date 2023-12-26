@@ -1,20 +1,19 @@
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI
 from pydantic import BaseModel
 from sqlalchemy import create_engine, Column, Float, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from databases import Database
 from datetime import datetime
 
-# Replace 'your_postgres_connection_string' with your actual PostgreSQL connection string
 DATABASE_URL = "postgresql://postgres:Josiah1!@localhost/django"
 
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+database = Database(DATABASE_URL)
+metadata = declarative_base()
 
-Base = declarative_base()
-
-class RawData(Base):
+class RawData(metadata):
     __tablename__ = "raw_data"
+
     id = Column(Integer, primary_key=True, index=True)
     device_id = Column(Integer)
     latitude = Column(Float)
@@ -26,36 +25,28 @@ class RawData(Base):
     raw_data = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-Base.metadata.create_all(bind=engine)
+class RawDataCreate(BaseModel):
+    device_id: int
+    latitude: float
+    longitude: float
+    timestamp: int
+    hdop: float
+    altitude: float
+    speed: float
+    raw_data: str
 
 app = FastAPI()
 
-class MobileCapture(BaseModel):
-    id: int
-    timestamp: int
-    lat: float
-    lon: float
-    speed: float
-    bearing: float
-    altitude: float
-    accuracy: float
-    batt: float
+@app.on_event("startup")
+async def startup_db_client():
+    await database.connect()
+
+@app.on_event("shutdown")
+async def shutdown_db_client():
+    await database.disconnect()
 
 @app.post("/mobile_capture/")
-async def create_mobile_capture(mobile_capture: MobileCapture):
-    db_mobile_capture = RawData(
-        device_id=mobile_capture.id,
-        latitude=mobile_capture.lat,
-        longitude=mobile_capture.lon,
-        timestamp=mobile_capture.timestamp,
-        hdop=mobile_capture.accuracy,
-        altitude=mobile_capture.altitude,
-        speed=mobile_capture.speed,
-        raw_data=f"Some raw data string"  # You can customize this field based on your requirements
-    )
-    db = SessionLocal()
-    db.add(db_mobile_capture)
-    db.commit()
-    db.refresh(db_mobile_capture)
-    db.close()
-    return db_mobile_capture
+async def create_raw_data(raw_data: RawDataCreate):
+    query = RawData.__table__.insert().values(**raw_data.dict())
+    await database.execute(query)
+    return {"status": "Record inserted successfully"}

@@ -30,7 +30,7 @@ from urllib.parse import quote_plus
 username = "postgres"
 password = "Josiah1!"
 host = "localhost"
-port = "25060"
+port = "5432"
 database = "django"
 sslmode = "require"
 

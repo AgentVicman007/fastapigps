@@ -111,13 +111,23 @@ async def create_address(address: AddressIn, db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 @app.post("/capture_raw_data")
 def capture_raw_data(data: RawDataRequest, db: Session = Depends(get_db)):
-    raw_data_entry = RawData(**data.dict())
-    db.add(raw_data_entry)
-    db.commit()
-    db.refresh(raw_data_entry)
-    return {"status": "success", "id": raw_data_entry.id}
+    try:
+        logger.info(f"Received data: {data}")
+        raw_data_entry = RawData(**data.dict())
+        db.add(raw_data_entry)
+        db.commit()
+        db.refresh(raw_data_entry)
+        return {"status": "success", "id": raw_data_entry.id}
+    except Exception as e:
+        logger.error(f"Error during data insertion: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/capture_raw_data2")
 def capture_raw_data2(

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from sqlalchemy import create_engine, Column, Float, Integer, String, DateTime
+from sqlalchemy import create_engine, Column, Float, Integer, String, DateTime, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from databases import Database
@@ -15,22 +15,22 @@ class RawData(metadata):
     __tablename__ = "raw_data"
 
     id = Column(Integer, primary_key=True, index=True)
-    device_id = Column(Integer)
+    device_id = Column(String)
     latitude = Column(Float)
     longitude = Column(Float)
     timestamp = Column(Integer)
-    hdop = Column(Float)
+    hdop = Column(String)
     altitude = Column(Float)
     speed = Column(Float)
     raw_data = Column(String)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, server_default=text("(now() at time zone 'UTC')"))
 
 class RawDataCreate(BaseModel):
-    device_id: int
+    device_id: str
     latitude: float
     longitude: float
     timestamp: int
-    hdop: float
+    hdop: str
     altitude: float
     speed: float
     raw_data: str
@@ -45,8 +45,23 @@ async def startup_db_client():
 async def shutdown_db_client():
     await database.disconnect()
 
-@app.post("/mobile_capture/")
-async def create_raw_data(raw_data: RawDataCreate):
-    query = RawData.__table__.insert().values(**raw_data.dict())
+@app.post("/capture_raw_data2")
+async def capture_raw_data2(raw_data: RawDataCreate):
+    # Assuming you have a database logic to insert the raw_data into your PostgreSQL database
+    # Replace the following lines with your actual database insertion logic
+    db_raw_data = RawData(**raw_data.dict())
+    query = RawData.__table__.insert().values(**db_raw_data.__dict__)
     await database.execute(query)
-    return {"status": "Record inserted successfully"}
+    
+    response_data = {
+        "status": "Record inserted successfully",
+        "device_id": raw_data.device_id,
+        "latitude": raw_data.latitude,
+        "longitude": raw_data.longitude,
+        "timestamp": raw_data.timestamp,
+        "hdop": raw_data.hdop,
+        "altitude": raw_data.altitude,
+        "speed": raw_data.speed,
+        "raw_data": raw_data.raw_data,
+    }
+    return response_data

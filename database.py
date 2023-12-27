@@ -47,15 +47,12 @@
 
 
 
-from fastapi import FastAPI
 import asyncio
-import socket
-import json
 from datetime import datetime
+from fastapi import FastAPI
 from pydantic import BaseModel
 from tortoise import Tortoise, fields
 from tortoise.models import Model
-from tortoise.transactions import atomic
 
 # Configure your PostgreSQL database
 DB_USERNAME = "postgres"
@@ -103,9 +100,10 @@ async def write_to_postgres(pos_msg: GT06Message):
         course=pos_msg.course,
     )
 
-async def handle_gt06_data(data: str):
-    gt06_msg = json.loads(data)
-    gt06_msg["fix_time"] = datetime.fromtimestamp(gt06_msg["fixTimestamp"])
+async def handle_gt06_data(data: bytes, addr):
+    gt06_msg = {"fix_time": datetime.utcnow()}  # Modify this based on your GT06 message format
+    # Process the raw GT06 message and extract relevant information
+
     await write_to_postgres(GT06Message(**gt06_msg))
 
 async def esp_tracker_server():
@@ -118,5 +116,3 @@ async def esp_tracker_server():
 
 if __name__ == "__main__":
     asyncio.run(esp_tracker_server())
-
-

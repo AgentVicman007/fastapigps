@@ -28,12 +28,14 @@ app = FastAPI()
 @app.post("/")
 async def capture_payload(request: Request):
     try:
-        raw_payload = await request.body()
-        print("Raw Payload received:", raw_payload)
+        raw_request = await request.body()
+        print("Raw Request received:", raw_request)
 
-        return {"message": "Payload captured successfully", "payload": raw_payload.decode("utf-8")}
+        # Your processing logic here
+
+        return {"message": "Request captured successfully", "raw_request": raw_request.decode("utf-8")}
     except Exception as e:
         print(f"Error processing request: {e}")
-        raise HTTPException(status_code=400, detail="Invalid payload format")
+        raise HTTPException(status_code=400, detail="Invalid request format")
 
 

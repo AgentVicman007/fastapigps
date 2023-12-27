@@ -21,16 +21,19 @@
 #                    "accuracy": accuracy, "batt": batt}
 #         print("Payload received:", payload)
 #         return {"message": "Payload captured successfully", "payload": payload}
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 
 app = FastAPI()
 
 # Single endpoint to capture payload from either URL parameters or JSON data
 @app.post("/")
-async def capture_payload(**kwargs):
-    if kwargs:
-        # Payload from raw data
-        print("Payload received:", kwargs)
-        return {"message": "Payload captured successfully", "payload": kwargs}
+async def capture_payload(request: Request):
+    payload = await request.json()
+    
+    if payload:
+        # Payload from JSON data
+        print("Payload received:", payload)
+        return {"message": "Payload captured successfully", "payload": payload}
     else:
         raise HTTPException(status_code=400, detail="Invalid payload format")
+

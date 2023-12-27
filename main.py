@@ -3,7 +3,7 @@ from fastapi import FastAPI, HTTPException
 app = FastAPI()
 
 # Single endpoint to capture payload from either URL parameters or JSON data
-@app.post("/capture_payload")
+@app.post("/")
 async def capture_payload(id: int = None, timestamp: int = None, lat: float = None, lon: float = None,
                           speed: float = None, bearing: float = None, altitude: float = None,
                           accuracy: float = None, batt: int = None, raw_payload: str = None):
